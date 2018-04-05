@@ -1,0 +1,6 @@
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\bin\Debug\BookDemo.dll
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\bin\Debug\BookDemo.pdb
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\obj\Debug\BookDemo.csprojResolveAssemblyReference.cache
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\obj\Debug\BookDemo.csproj.CoreCompileInputs.cache
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\obj\Debug\BookDemo.dll
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\obj\Debug\BookDemo.pdb
