@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalFormatProvider.cs" />
     <Compile Include="Book.cs" />
     <Compile Include="BookListStorage.cs" />
     <Compile Include="IStorage.cs" />

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Globalization;
 
 namespace BookDemo
 {
     /// <summary>
     /// Contains information about book.
     /// </summary>
-    public class Book
+    public class Book : IFormattable
     {
         private string isbn;
         private string author;
@@ -146,7 +147,7 @@ namespace BookDemo
         /// Checks if books equal. 
         /// </summary>
         /// <param name="otherBook">Other book.</param>
-        /// <returns>True if books are equal. False - don't equal.</returns>
+        /// <returns>Returns true if books are equal. False - don't equal.</returns>
         public override bool Equals(object otherBook)
         {
             return ReferenceEquals(this, otherBook) ? true : false;
@@ -157,7 +158,7 @@ namespace BookDemo
         /// </summary>
         /// <param name="otherBook">Other book.</param>
         /// <param name="equatable">The way for checking.</param>
-        /// <returns>True if books are equal. False - don't equal.</returns>
+        /// <returns>Returns true if books are equal. False - don't equal.</returns>
         /// <exception cref="ArgumentNullException">Throws when one of the books doesn't exists</exception>
         public bool Equals(Book otherBook, IEquatable<Book> equatable)
         {
@@ -177,10 +178,70 @@ namespace BookDemo
         /// <summary>
         /// Returns hash code of the book.
         /// </summary>
-        /// <returns>Hash code.</returns>
+        /// <returns>Returns hash code.</returns>
         public override int GetHashCode()
         {
             return this.ISBN.GetHashCode();
+        }
+        
+        /// <summary>
+        /// Returns information about book.
+        /// </summary>
+        /// <returns>String Representation of the book.</returns>
+        public override string ToString()
+        {
+            return this.ToString("G", CultureInfo.CurrentCulture);
+        }
+
+
+        /// <summary>
+        /// Returns information about book.
+        /// </summary>
+        /// <param name="format">Letter of the format.</param>
+        /// <returns>Returns string Representation of the book.</returns>
+        public string ToString(string format)
+        {
+            return this.ToString(format, CultureInfo.CurrentCulture);
+        }
+
+        /// <summary>
+        /// Returns information about book.
+        /// </summary>
+        /// <param name="format">Letter of the format.</param>
+        /// <param name="provider">IFormatProvider.</param>
+        /// <param name="formatter">ICustomFormatter.</param>
+        /// <returns>Returns string Representation of the book.</returns>
+        public string ToString(string format, IFormatProvider provider, ICustomFormatter formatter)
+        {
+            return formatter.Format(format, this, provider);
+        }
+
+        /// <summary>
+        /// Returns information about book.
+        /// </summary>
+        /// <param name="format">Letter of the format.</param>
+        /// <param name="provider">IFormatProvider.</param>
+        /// <returns>Returns string Representation of the book.</returns>
+        public string ToString(string format, IFormatProvider provider)
+        {
+            if (String.IsNullOrEmpty(format)) format = "G";
+            if (provider == null) provider = CultureInfo.CurrentCulture;
+
+            switch (format.ToUpperInvariant())
+            {
+                case "G":
+                    return String.Format("{0}, {1}", Author, BookTitle);
+                case "F":
+                    return String.Format(new CultureInfo("en-US"), "ISBN {0}, {1}, {2}, {3}, {4}, {5}, {6:C}", ISBN, Author, BookTitle, PublishingHouse, PublishingYear, NumberOfPages, Price); 
+                case "P":
+                    return String.Format("ISBN {0}, {1}, {2}, {3}, {4}, {5}", ISBN, Author, BookTitle, PublishingHouse, PublishingYear, NumberOfPages);
+                case "M":
+                    return String.Format("{0}, {1}, {2}, {3}", Author, BookTitle, PublishingHouse, PublishingYear);
+                case "S":
+                    return String.Format(new CultureInfo("en-US"), "{0}, {1}, Price: {2:C}", Author, BookTitle, Price);
+                default:
+                    throw new FormatException(String.Format("The {0} format string is not supported.", format));
+            }
         }
     }
 }
