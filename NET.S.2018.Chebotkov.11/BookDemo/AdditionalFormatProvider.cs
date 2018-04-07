@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using NLog;
 
 namespace BookDemo
 {
@@ -8,6 +9,7 @@ namespace BookDemo
     /// </summary>
     public class AdditionalFormatProvider : IFormatProvider, ICustomFormatter
     {
+        private Logger logger = LogManager.GetCurrentClassLogger();
         private IFormatProvider provider;
 
         /// <summary>
@@ -19,8 +21,15 @@ namespace BookDemo
         /// Initializes a new instance of AdditionalFormatProvider.
         /// </summary>
         /// <param name="provider"></param>
+        /// <exception cref="ArgumentNullException">Throws when provider is null.</exception>
         public AdditionalFormatProvider(IFormatProvider provider)
         {
+            if (provider is null)
+            {
+                logger.Error("ArgumentNullException was thrown: {0} is null.", nameof(provider));
+                throw new ArgumentNullException("{0} is null.", nameof(provider));
+            }
+
             this.provider = provider; 
         }
 
@@ -49,7 +58,7 @@ namespace BookDemo
             }
 
             Book book = (Book)arg;
-            return String.Format("Limited edition: {0}, {1}. Special Price: {2}", book.Author, book.BookTitle, book.Price);
+            return String.Format("Limited edition: {0}, {1}. Special Price: {2:c}", book.Author, book.BookTitle, book.Price);
         }
     }
 }

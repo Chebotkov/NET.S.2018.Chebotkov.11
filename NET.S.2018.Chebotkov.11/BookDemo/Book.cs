@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using NLog;
 
 namespace BookDemo
 {
     /// <summary>
     /// Contains information about book.
     /// </summary>
-    public class Book : IFormattable
+    public class Book : IFormattable, IComparable, IComparable<Book>
     {
         private string isbn;
         private string author;
@@ -15,6 +16,7 @@ namespace BookDemo
         private int publishingYear;
         private int numberOfPages;
         private decimal price;
+        private Logger logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// Initializes a new instance of <see cref="Book"/>
@@ -31,11 +33,14 @@ namespace BookDemo
         {
             if (isbn is null || author is null || bookTitle is null || publishingHouse is null)
             {
+
+                logger.Error("ArgumentNullException was thrown: ISBN, author, book title and publishing house are required parametres.");
                 throw new ArgumentNullException("ISBN, author, book title and publishing house are required parametres.");
             }
 
             if (price < 0 || numberOfPages < 0 || publishingYear < 0)
             {
+                logger.Error("ArgumentException was thrown: Price, number of pages and publishing year must be positive.");
                 throw new ArgumentException("Price, number of pages and publishing year must be positive.");
             }
             
@@ -114,7 +119,7 @@ namespace BookDemo
         }
 
         /// <summary>
-        /// Gets book price.
+        /// Gets and sets book price.
         /// </summary>
         public decimal Price
         {
@@ -124,7 +129,15 @@ namespace BookDemo
             }
             private set
             {
-                price = value > 0 ? value : throw new ArgumentException("Price must be positive.");
+                if (value > 0)
+                {
+                    price = value;
+                }
+                else
+                {
+                    logger.Error("ArgumentException was thrown: Price must be positive.");
+                    throw new ArgumentException("Price must be positive.");
+                }
             }
         }
         
@@ -137,10 +150,52 @@ namespace BookDemo
         {
             if (newPrice < 0)
             {
+                logger.Error("ArgumentException was thrown: Price must be positive.");
                 throw new ArgumentException("Price must be positive.");
             }
 
             Price = newPrice;
+        }
+
+        /// <summary>
+        /// Returns int result of the comparisons.
+        /// </summary>
+        /// <param name="other">Comparable book.</param>
+        /// <exception cref="ArgumentNullException">Throws when book is null.</exception>
+        /// <exception cref="InvalidCastException">Throws when object isn't a book.</exception>
+        /// <returns>Returns 0 if books are equal, 1 if first book bigger than second, -1 in other cases.</returns>
+        public int CompareTo(object obj)
+        {
+            if (ReferenceEquals(obj, null))
+            {
+                logger.Error("ArgumentNullException was thrown: Book can't be null.");
+                throw new ArgumentNullException("Book can't be null.");
+            }
+
+            if (!(obj is Book))
+            {
+                logger.Error("InvalidCastException was thrown: Current object isn't a book.");
+                throw new InvalidCastException("Current object isn't a book.");
+            }
+
+            return CompareTo((Book)obj);
+        }
+
+        /// <summary>
+        /// Returns int result of the comparisons.
+        /// </summary>
+        /// <param name="other">Comparable book.</param>
+        /// <exception cref="ArgumentNullException">Throws when book is null.</exception>
+        /// <returns>Returns 0 if books are equal, 1 if first book bigger than second, -1 in other cases.</returns>
+        public int CompareTo(Book other)
+        {
+            if(ReferenceEquals(other, null))
+            {
+                logger.Error("ArgumentNullException was thrown: Book can't be null.");
+                throw new ArgumentNullException("Book can't be null.");
+            }
+
+            return this.NumberOfPages - other.NumberOfPages;
         }
 
         /// <summary>
@@ -150,7 +205,18 @@ namespace BookDemo
         /// <returns>Returns true if books are equal. False - don't equal.</returns>
         public override bool Equals(object otherBook)
         {
-            return ReferenceEquals(this, otherBook) ? true : false;
+            if (ReferenceEquals(this, otherBook))
+            {
+                return true;
+            }
+
+            Book tempBook = (Book) otherBook;
+            if (this.ISBN == tempBook.ISBN && this.Author == tempBook.Author && this.BookTitle == tempBook.BookTitle && this.PublishingHouse == tempBook.PublishingHouse && this.PublishingYear == tempBook.PublishingYear && this.NumberOfPages == tempBook.NumberOfPages && this.Price == tempBook.Price)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -169,6 +235,7 @@ namespace BookDemo
 
             if (ReferenceEquals(this, null) || ReferenceEquals(otherBook, null))
             {
+                logger.Error("ArgumentNullException was thrown: Book can't be null.");
                 throw new ArgumentNullException("Book can't be null.");
             }
 

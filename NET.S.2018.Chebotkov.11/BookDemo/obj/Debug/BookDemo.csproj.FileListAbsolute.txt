@@ -4,3 +4,7 @@ D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\obj\Debug\Bo
 D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\obj\Debug\BookDemo.csproj.CoreCompileInputs.cache
 D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\obj\Debug\BookDemo.dll
 D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\obj\Debug\BookDemo.pdb
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\bin\Debug\app.config
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\bin\Debug\BookDemo.dll.config
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\bin\Debug\NLog.dll
+D:\Courses\NET.S.2018.Chebotkov.11\NET.S.2018.Chebotkov.11\BookDemo\bin\Debug\NLog.xml

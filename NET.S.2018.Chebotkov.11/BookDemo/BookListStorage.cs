@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,36 +8,59 @@ namespace BookDemo
     /// <summary>
     /// Class for working with books.
     /// </summary>
-    public static class BookListStorage
+    public class BookListStorage
     {
-        private static List<Book> Books;
-        public static IStorage Storage { get; set; }
+        public List<Book> Books;
+        private Logger logger = LogManager.GetCurrentClassLogger();
+        private IStorage storage = new StorageR();
+        
+        /// <summary>
+        /// Gets or sets storage for BookListStorage.
+        /// </summary>
+        public IStorage Storage
+        {
+            get
+            {
+                return storage;
+            }
+            set => Storage = value is null ? new StorageR() : value;
+        }
 
         /// <summary>
         /// Initializes book collection. Load it from file if it exists.
         /// </summary>
-        static BookListStorage()
+        public BookListStorage()
         {
             Books = new List<Book>();
-            Storage = new StorageR();
-            Storage.ReadBooksFromTheFile(Books);
         }
 
         /// <summary>
         /// Adds book in library.
         /// </summary>
         /// <param name="book">New book.</param>
-        public static void AddBook(Book book)
+        public bool AddBook(Book book)
         {
+            if (Books.Contains(book))
+            {
+                return false;
+            }
+
             Books.Add(book);
             Storage.WriteBooksToTheFile(Books);
+            return true;
+        }
+        
+        public void SetNewStorage(IStorage storage)
+        {
+            Storage = storage is null ? new StorageR() : storage;
+            Books = Storage.ReadBooksFromTheFile();
         }
 
         /// <summary>
         /// Removes book from library.
         /// </summary>
         /// <param name="book">Removable book.</param>
-        public static void RemoveBook(Book book)
+        public void RemoveBook(Book book)
         {
             Books.Remove(book);
             Storage.WriteBooksToTheFile(Books);
@@ -47,38 +71,27 @@ namespace BookDemo
         /// </summary>
         /// <param name="comparer">Comparer.</param>
         /// <exception cref="ArgumentNullException">Throws if one of the books doesn't exist.</exception>
-        public static void SortBooksByTag(IComparer comparer)
+        public void SortBooksByTag(IComparer<Book> comparer)
         {
             if (Books.Count < 1)
             {
+                logger.Error("ArgumentNullException was thrown: There is no books to sort."); 
                 throw new ArgumentNullException("There is no books to sort.");
             }
-
-            bool isSorted = false;
-            int endOfSortedPart = 0;
-            while (!isSorted)
+            if (comparer is null)
             {
-                isSorted = true;
-                for (int i = Books.Count - 1; i > endOfSortedPart; i--)
-                {
-
-                    if (comparer.Compare(Books[i], Books[i - 1]) < 0)
-                    {
-                        Book temp = Books[i];
-                        Books[i] = Books[i - 1];
-                        Books[i - 1] = temp;
-                        isSorted = false;
-                    }
-                }
-                endOfSortedPart++;
+                logger.Error("ArgumentNullException was thrown: {0} is null.", nameof(comparer));
+                throw new ArgumentNullException("{0} is null.", nameof(comparer));
             }
+
+            Books.Sort(comparer);            
         }
 
         /// <summary>
         /// Finds book by tag and returns it. 
         /// </summary>
         /// <returns>Returns wanted book.</returns>
-        public static Book FindBookByTag()
+        public Book FindBookByTag()
         {
             throw new NotImplementedException();
         }

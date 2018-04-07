@@ -11,12 +11,12 @@ namespace BookDemo
         /// Writes books to the file.
         /// </summary>
         /// <param name="Books">Books.</param>
-        void WriteBooksToTheFile(List<Book> Books);
+        void WriteBooksToTheFile(IEnumerable<Book> Books);
 
         /// <summary>
         /// Reads books from the file.
         /// </summary>
         /// <param name="Books">Book.</param>
-        void ReadBooksFromTheFile(List<Book> Books);
+        List<Book> ReadBooksFromTheFile();
     }
 }

@@ -1,0 +1,18 @@
+﻿			bool isSorted = false;
+            int endOfSortedPart = 0;
+            while (!isSorted)
+            {
+                isSorted = true;
+                for (int i = Books.Count - 1; i > endOfSortedPart; i--)
+                {
+
+                    if (comparer.Compare(Books[i], Books[i - 1]) < 0)
+                    {
+                        Book temp = Books[i];
+                        Books[i] = Books[i - 1];
+                        Books[i - 1] = temp;
+                        isSorted = false;
+                    }
+                }
+                endOfSortedPart++;
+            }
